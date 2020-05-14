@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Python extensions
+*.pyc
+
+.project
+.pydev*
+db.sqlite*
+
+
+.DS*
