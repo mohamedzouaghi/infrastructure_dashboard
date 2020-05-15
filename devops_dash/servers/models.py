@@ -17,13 +17,6 @@ SERVER_ENV_TYPES = (
             ('M','Demo'),
             )
 
-PAYMENT_TYPES = (
-            ('I','Included within contract'),
-            ('A','ATIT paid on behalf of customer'),
-            ('C','Paid by customer'),
-            ('O','Other'),
-
-            )
 
 class Project(models.Model):
   name = models.CharField('Project Name', max_length=200) # Project name
@@ -46,6 +39,19 @@ class PaymentType(models.Model):
   def __str__(self):
       return self.label
 
+# TODO(mz@)  Add status model for simple monitoring
+#class ServerStatus(models.Model):
+#  server = models.ForeignKey(ServerDetails, on_delete=models.CASCADE)
+#
+#  def last_ping_status(self):
+#    # TODO(mz@) add code to check ping status here
+#    return 'Unkown'
+#  
+#  def last_seen_activity(self):
+#    # TODO(mz@) add code to check ping status here
+#    return 'Unkown' 
+
+
 class ServerDetails(models.Model):
   server_name = models.CharField('Server Name', max_length=200, default='')
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -57,7 +63,7 @@ class ServerDetails(models.Model):
                                    blank=True)
   environment_type = models.CharField('Environment', choices=SERVER_ENV_TYPES,
                                       max_length=1)
-  monthly_mount = models.PositiveIntegerField('Monthly Amount', null=True, blank=True)
+  monthly_mount = models.PositiveIntegerField('Monthly Cost', null=True, blank=True)
   expires_on = models.DateField('Expires on', null=True, blank=True)
   comments = models.TextField('Comments', null=True, blank=True)
   admin_server_url = models.URLField('Admin Server URL', null=True, blank=True)
@@ -68,7 +74,8 @@ class ServerDetails(models.Model):
   def still_valid(self):
     if not self.expires_on:
       return False
-    return self.expires_on >= datetime.date.today() + datetime.timedelta(days=30)#timezone.now().date# - datetime.timedelta(days=30)
+    # TODO (mz@): set this to True when contract is of a type "Paid by customer"
+    return self.expires_on >= datetime.date.today() + datetime.timedelta(days=30)
   
   still_valid.admin_order_field = 'expires_on'
   still_valid.boolean = True
@@ -78,10 +85,19 @@ class ServerDetails(models.Model):
   def image_tag(self):
     return mark_safe('<img src="%s%s" width="150" height="150" />' % ( settings.MEDIA_URL, self.seperate_bill_file))
 
-  image_tag.short_description = 'Bill img'
+  image_tag.short_description = 'Bill image'
 
   def __str__(self):
-      return str(self.project.name) + '---' + str(self.ip_address)
+    return str(self.project.name) + '---' + str(self.ip_address)
+  
+  def last_ping_status(self):
+    # TODO(mz@) add code to check ping status here
+    return 'Unkown'
+  
+  def last_seen_activity(self):
+    # TODO(mz@) add code to check ping status here
+    return 'Unkown'   
+
     
     
     
