@@ -73,14 +73,19 @@ WSGI_APPLICATION = 'devops_dash.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+''
+# In prod environment, make sure to get those details following a high security norm.
+DB_NAME = 'placeholder'
+USER = 'placeholder'
+PWD = 'placeholder'
 
 DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'devops_dash',
-        'USER': 'root',
-        'PASSWORD': 'zoua_2010',
+        'NAME': DB_NAME,
+        'USER': USER,
+        'PASSWORD': PWD,
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
